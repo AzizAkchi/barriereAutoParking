@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkIoT — Parking intelligent</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">P</div>
+      <div>
+        <h1>ParkIoT</h1>
+        <p>SMART PARKING SYSTEM</p>
+      </div>
+    </div>
+    <div class="connection">
+      <span id="connectionDot" class="dot"></span>
+      <span id="connectionText">Connexion...</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="welcome">
+      <div>
+        <p class="eyebrow">TABLEAU DE BORD IOT</p>
+        <h2>Gestion intelligente du parking</h2>
+        <p class="subtitle">
+          Surveillez les capteurs et contrôlez votre barrière en temps réel.
+        </p>
+      </div>
+      <div class="system-status">
+        <span class="status-label">ÉTAT DU SYSTÈME</span>
+        <strong id="systemStatus">Initialisation...</strong>
+        <small id="lastUpdate">En attente des données</small>
+      </div>
+    </section>
+
+    <section class="section-heading">
+      <div>
+        <h3>Vue d'ensemble</h3>
+        <p>Mesures transmises par l'ESP32</p>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric-card temperature">
+        <div class="metric-top">
+          <span class="metric-icon">🌡️</span>
+          <span class="metric-tag">TEMPÉRATURE</span>
+        </div>
+        <div class="metric-value">
+          <span id="temperature">--</span><span class="unit">°C</span>
+        </div>
+        <p>Température ambiante</p>
+      </article>
+
+      <article class="metric-card humidity">
+        <div class="metric-top">
+          <span class="metric-icon">💧</span>
+          <span class="metric-tag">HUMIDITÉ</span>
+        </div>
+        <div class="metric-value">
+          <span id="humidity">--</span><span class="unit">%</span>
+        </div>
+        <p>Humidité relative</p>
+      </article>
+
+      <article class="metric-card distance">
+        <div class="metric-top">
+          <span class="metric-icon">📡</span>
+          <span class="metric-tag">DISTANCE</span>
+        </div>
+        <div class="metric-value">
+          <span id="distance">--</span><span class="unit">cm</span>
+        </div>
+        <p>Mesure ultrasonique</p>
+      </article>
+
+      <article class="metric-card light">
+        <div class="metric-top">
+          <span class="metric-icon">☀️</span>
+          <span class="metric-tag">LUMINOSITÉ</span>
+        </div>
+        <div class="metric-value">
+          <span id="light">--</span>
+        </div>
+        <p>Valeur du capteur LDR (ADC)</p>
+      </article>
+    </section>
+
+    <section class="main-grid">
+      <article class="panel barrier-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ACTIONNEUR</p>
+            <h3>Contrôle de la barrière</h3>
+          </div>
+          <span id="barrierBadge" class="badge neutral">Inconnue</span>
+        </div>
+
+        <div class="barrier-visual">
+          <div class="road">
+            <div class="road-line"></div>
+            <div class="gate-post"></div>
+            <div id="barrierArm" class="barrier-arm">
+              <span></span><span></span><span></span>
+              <span></span><span></span><span></span>
+            </div>
+            <div class="car">🚗</div>
+          </div>
+        </div>
+
+        <div class="angle-row">
+          <span>Angle de la barrière</span>
+          <strong><span id="angle">--</span>°</strong>
+        </div>
+
+        <div class="progress-track">
+          <div id="angleProgress" class="progress-fill"></div>
+        </div>
+
+        <div class="controls">
+          <button id="openButton" class="btn btn-primary">
+            ↑ Ouvrir
+          </button>
+          <button id="closeButton" class="btn btn-secondary">
+            ↓ Fermer
+          </button>
+        </div>
+
+        <button id="localButton" class="btn btn-outline">
+          Activer le mode local (potentiomètre)
+        </button>
+
+        <p class="hint">
+          En mode distant, les boutons commandent le servo.
+          En mode local, le potentiomètre règle l'angle.
+        </p>
+        <p id="commandMessage" class="message" aria-live="polite">
+          En attente de connexion...
+        </p>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">SÉCURITÉ</p>
+            <h3>Détection d'obstacles</h3>
+          </div>
+          <span class="metric-icon">🛡️</span>
+        </div>
+
+        <div id="obstacleCard" class="obstacle-card safe">
+          <div id="obstacleIcon" class="obstacle-icon">✓</div>
+          <div>
+            <strong id="obstacleTitle">Aucun obstacle</strong>
+            <p id="obstacleDescription">La zone semble libre.</p>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <span>LED d'alerte</span>
+          <strong id="ledStatus">Éteinte</strong>
+        </div>
+        <div class="detail-row">
+          <span>Buzzer</span>
+          <strong id="buzzerStatus">Inactif</strong>
+        </div>
+        <div class="detail-row">
+          <span>Mode de contrôle</span>
+          <strong id="modeStatus">--</strong>
+        </div>
+        <div class="detail-row">
+          <span>Potentiomètre (ADC)</span>
+          <strong id="potValue">--</strong>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <span>ParkIoT · Projet ESP32 & Firebase</span>
+      <span>Surveillance du système de parking</span>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
